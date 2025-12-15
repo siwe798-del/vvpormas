@@ -42,7 +42,6 @@ class SecurityService {
     ]
   }
 
-  private requestCount: Map<string, number> = new Map()
   private requestTimestamps: Map<string, number[]> = new Map()
 
   /**

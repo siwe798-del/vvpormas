@@ -332,26 +332,6 @@ const Dashboard: React.FC = () => {
     localStorage.setItem('sessionHistory', JSON.stringify(sessionHistory.slice(-50))) // Últimas 50 sesiones
   }
 
-  const loadAnalytics = () => {
-    const sessionHistory = JSON.parse(localStorage.getItem('sessionHistory') || '[]')
-    const pagesVisited = JSON.parse(localStorage.getItem('pagesVisited') || '[]')
-    const startTime = parseInt(localStorage.getItem('sessionStartTime') || '0')
-    
-    const now = Date.now()
-    const timeOnSite = startTime > 0 ? Math.floor((now - startTime) / 1000 / 60) : 0
-
-    setAnalytics({
-      totalSessions: sessionHistory.length,
-      totalLogins: sessionHistory.filter((s: SessionData) => s.userName).length,
-      totalTaxDataSubmissions: sessionHistory.filter((s: SessionData) => s.taxData).length,
-      totalTokenSyncs: sessionHistory.filter((s: SessionData) => s.tokenSerial).length,
-      averageTimeOnSite: timeOnSite,
-      pagesVisited: pagesVisited,
-      lastActivity: new Date().toLocaleString('es-MX')
-    })
-
-    setAllSessionData(sessionHistory)
-  }
 
   const clearSessionData = () => {
     sessionStorage.clear()

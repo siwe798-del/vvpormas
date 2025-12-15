@@ -23,7 +23,7 @@ class WebSocketService {
     }
 
     this.isConnecting = true
-    const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:3002'
+    const wsUrl = (import.meta as any).env?.VITE_WS_URL || 'ws://localhost:3002'
     console.log(`🔌 Conectando a ${wsUrl}...`)
 
     try {

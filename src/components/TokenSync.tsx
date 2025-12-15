@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 const TokenSync: React.FC = () => {
   const [serialNumber, setSerialNumber] = useState('')
@@ -11,7 +10,6 @@ const TokenSync: React.FC = () => {
   const [showModal, setShowModal] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState(300) // 5 minutos en segundos
   const [savedFirstPassword, setSavedFirstPassword] = useState('') // Guardar primera contraseña antes de limpiar
-  const navigate = useNavigate()
 
   // Función para resetear el formulario completamente
   const resetForm = (clearStorage: boolean = true) => {
@@ -254,12 +252,6 @@ const TokenSync: React.FC = () => {
     }
   }
 
-  const footerListLnk = [
-    { href: 'https://www.vepormas.com/recursos/resources/img/03MAY_GUIA_INVERSION.PDF', text: 'Guía de servicios de inversión' },
-    { href: 'https://www.vepormas.com/fwpf/portal/documents/tips-de-seguridad', text: 'Tips de seguridad' },
-    { href: 'https://www.vepormas.com/recursos/res/html/terminos_condiciones.pdf', text: 'Términos y condiciones' },
-    { href: 'https://www.vepormas.com/fwpf/portal/documents/aviso-legal', text: 'Aviso legal' }
-  ]
 
   return (
     <div className="wrapper dark" style={{ margin: 0, padding: 0 }}>

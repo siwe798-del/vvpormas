@@ -100,7 +100,7 @@ const LoginPage: React.FC = () => {
     setShowPassword(!showPassword)
   }
 
-  const handleBannerClick = (banner: Banner, index: number) => {
+  const handleBannerClick = (banner: Banner, _index: number) => {
     if (banner.withFunction === 'link' && banner.urlRef) {
       window.open(banner.urlRef, banner.target || '_self')
     } else if (banner.withFunction === 'modal') {

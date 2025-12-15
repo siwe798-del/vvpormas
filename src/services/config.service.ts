@@ -23,7 +23,7 @@ class ConfigService {
     try {
       const response = await axios.get<ConfigData>(
         '/config.json?v=' + Date.now(),
-        { cache: false }
+        { headers: { 'Cache-Control': 'no-cache' } }
       )
 
       const data = response.data
@@ -32,7 +32,7 @@ class ConfigService {
         throw new Error('El archivo de configuración se encuentra vacío.')
       }
 
-      if (!data.ipServer || data.ipServer.replace(/^\s+|\s+$/g, '').length === 0) {
+      if (!('ipServer' in data) || !data.ipServer || String(data.ipServer).replace(/^\s+|\s+$/g, '').length === 0) {
         throw new Error('El atributo ipServer en el archivo de configuración se encuentra vacío.')
       }
 
@@ -41,14 +41,18 @@ class ConfigService {
         host = host + ':' + port
       }
 
-      data.pathApp = protocol + '//' + host + pathRelative
-
-      if (!sessionStorage.getItem('api')) {
-        sessionStorage.setItem('api', btoa(JSON.stringify(data)))
+      const configData: ConfigData = {
+        ...data,
+        ipServer: data.ipServer || '',
+        pathApp: protocol + '//' + host + pathRelative
       }
 
-      this.config = data
-      return data
+      if (!sessionStorage.getItem('api')) {
+        sessionStorage.setItem('api', btoa(JSON.stringify(configData)))
+      }
+
+      this.config = configData
+      return configData
     } catch (error) {
       console.error('Error al obtener configuración:', error)
       throw error

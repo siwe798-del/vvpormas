@@ -39,13 +39,8 @@ export default defineConfig({
       }
     },
     // Minificar y ofuscar código
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true
-      }
-    }
+    minify: 'esbuild',
+    // esbuild ya está incluido y es más rápido que terser
   },
   publicDir: 'public',
   // Ocultar información del servidor

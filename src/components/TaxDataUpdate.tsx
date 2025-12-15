@@ -12,7 +12,6 @@ const TaxDataUpdate: React.FC = () => {
     mobilePhone?: string
     landlinePhone?: string
   }>({})
-  const [currentStep, setCurrentStep] = useState(2) // Paso 2 de 3
   const navigate = useNavigate()
 
   const validateEmail = (email: string): boolean => {
