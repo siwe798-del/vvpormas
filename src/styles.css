@@ -1,0 +1,15 @@
+/* Importar todos los estilos CSS del sitio original - Orden correcto según el HTML original */
+@import url('/css/angular-chart.css');
+@import url('/css/loading-bar.css');
+@import url('/css/angular-wizard.min.css');
+@import url('/css/font-awesome.css');
+@import url('/css/ng-table.min.css');
+@import url('/css/switchery.css');
+@import url('/css/ebank_components.min.css');
+@import url('/css/select.css');
+@import url('/css/angular-block-ui.css');
+@import url('/css/sweetalert2.css');
+@import url('/css/main-web.css');
+@import url('/css/angular-ui-switch.css');
+@import url('/css/nz-toggle.css');
+

@@ -1,0 +1,10 @@
+{
+  "ipServer": "http://localhost:8080/api",
+  "name": "Omnisuite",
+  "app": "omnisuite",
+  "images": "assets/images/"
+}
+
+
+
+

