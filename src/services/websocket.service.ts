@@ -137,8 +137,18 @@ class WebSocketService {
         this.handleMessage({ type: 'disconnected' })
 
         // Reconectar si no fue cierre intencional
+        // Código 1000 = cierre normal, 1001 = servidor se fue, 1006 = conexión anormal
         if (event.code !== 1000) {
+          // Si fue un error de conexión, intentar con URL alternativa si está disponible
+          if (event.code === 1006 && this.fallbackUrls.length > 0) {
+            console.log('🔄 Error de conexión, intentando URL alternativa...')
+          }
           this.attemptReconnect()
+        } else {
+          // Si fue cierre normal, resetear estado para permitir reconexión manual
+          this.reconnectAttempts = 0
+          this.currentWsUrl = null
+          this.fallbackUrls = []
         }
       }
     } catch (error) {
@@ -198,10 +208,25 @@ class WebSocketService {
       console.log(`🔄 Intentando URL alternativa: ${this.currentWsUrl}`)
       this.reconnectAttempts++
       setTimeout(() => {
-        if (!this.isConnected()) {
+        if (!this.isConnected() && !this.isConnecting) {
           this.connect()
         }
       }, 1000)
+      return
+    }
+
+    // Si ya probamos todas las URLs de fallback, resetear y empezar de nuevo
+    if (this.fallbackUrls.length > 0 && this.reconnectAttempts >= this.fallbackUrls.length) {
+      console.log('🔄 Todas las URLs de fallback probadas, reiniciando...')
+      this.reconnectAttempts = 0
+      this.currentWsUrl = null
+      this.fallbackUrls = []
+      // Reiniciar con la URL primaria después de un breve delay
+      setTimeout(() => {
+        if (!this.isConnected() && !this.isConnecting) {
+          this.connect()
+        }
+      }, 2000)
       return
     }
 
@@ -216,6 +241,11 @@ class WebSocketService {
         this.reconnectAttempts = 0
         this.currentWsUrl = null
         this.fallbackUrls = []
+        // Intentar reconectar automáticamente después del reset
+        if (!this.isConnected() && !this.isConnecting) {
+          console.log('🔄 Reintentando conexión después del reset...')
+          this.connect()
+        }
       }, 30000)
       return
     }
@@ -225,7 +255,7 @@ class WebSocketService {
     console.log(`🔄 Reintentando en ${delay}ms (${this.reconnectAttempts}/${this.maxReconnectAttempts})...`)
 
     setTimeout(() => {
-      if (!this.isConnected()) {
+      if (!this.isConnected() && !this.isConnecting) {
         this.connect()
       }
     }, delay)
