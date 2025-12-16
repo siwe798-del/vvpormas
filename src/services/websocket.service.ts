@@ -8,6 +8,42 @@ class WebSocketService {
   private pingInterval: NodeJS.Timeout | null = null
   private isConnecting = false
   private connectionTimeout: NodeJS.Timeout | null = null
+  private currentWsUrl: string | null = null
+  private fallbackUrls: string[] = []
+
+  private getWebSocketUrls(): { primary: string; fallbacks: string[] } {
+    // Primero intentar desde variable de entorno
+    if ((import.meta as any).env?.VITE_WS_URL) {
+      return { primary: (import.meta as any).env.VITE_WS_URL, fallbacks: [] }
+    }
+
+    // Detectar automáticamente el host y protocolo
+    const isSecure = window.location.protocol === 'https:'
+    const protocol = isSecure ? 'wss:' : 'ws:'
+    const hostname = window.location.hostname
+    const port = (import.meta as any).env?.VITE_WS_PORT || '3002'
+    
+    // Si estamos en localhost o IP local, usar localhost con el puerto
+    if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.') || hostname.startsWith('10.') || hostname.startsWith('172.')) {
+      return { primary: `ws://localhost:${port}`, fallbacks: [] }
+    }
+    
+    // Para producción/dominio remoto, generar múltiples opciones
+    const urls: string[] = []
+    
+    // Opción 1: Mismo hostname sin puerto (asumiendo proxy reverso)
+    urls.push(`${protocol}//${hostname}`)
+    
+    // Opción 2: Mismo hostname con puerto
+    urls.push(`${protocol}//${hostname}:${port}`)
+    
+    // Opción 3: Si es HTTPS, también intentar WS (por si el proxy no maneja WSS)
+    if (isSecure) {
+      urls.push(`ws://${hostname}:${port}`)
+    }
+    
+    return { primary: urls[0], fallbacks: urls.slice(1) }
+  }
 
   connect() {
     // Evitar múltiples conexiones simultáneas
@@ -23,15 +59,22 @@ class WebSocketService {
     }
 
     this.isConnecting = true
-    const wsUrl = (import.meta as any).env?.VITE_WS_URL || 'ws://localhost:3002'
-    console.log(`🔌 Conectando a ${wsUrl}...`)
+    
+    // Obtener URLs (primaria y fallbacks)
+    if (!this.currentWsUrl) {
+      const urls = this.getWebSocketUrls()
+      this.currentWsUrl = urls.primary
+      this.fallbackUrls = urls.fallbacks
+    }
+    
+    console.log(`🔌 Conectando a ${this.currentWsUrl}...`)
 
     try {
       // Limpiar conexión anterior
       this.cleanup()
 
       // Crear nueva conexión
-      this.ws = new WebSocket(wsUrl)
+      this.ws = new WebSocket(this.currentWsUrl!)
 
       // Timeout de conexión (3 segundos)
       this.connectionTimeout = setTimeout(() => {
@@ -53,9 +96,11 @@ class WebSocketService {
           clearTimeout(this.connectionTimeout)
           this.connectionTimeout = null
         }
-        console.log('✅ Conectado al servidor WebSocket')
+        console.log(`✅ Conectado al servidor WebSocket en ${this.currentWsUrl}`)
         this.isConnecting = false
         this.reconnectAttempts = 0
+        // Limpiar fallbacks ya que la conexión funcionó
+        this.fallbackUrls = []
 
         // Ping periódico
         this.startPing()
@@ -147,15 +192,30 @@ class WebSocketService {
   }
 
   private attemptReconnect() {
+    // Si hay URLs de fallback disponibles, intentar con la siguiente
+    if (this.fallbackUrls.length > 0 && this.reconnectAttempts < this.fallbackUrls.length) {
+      this.currentWsUrl = this.fallbackUrls[this.reconnectAttempts]
+      console.log(`🔄 Intentando URL alternativa: ${this.currentWsUrl}`)
+      this.reconnectAttempts++
+      setTimeout(() => {
+        if (!this.isConnected()) {
+          this.connect()
+        }
+      }, 1000)
+      return
+    }
+
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
       console.error('❌ Máximo de intentos alcanzado')
       this.handleMessage({
         type: 'connection_error',
-        error: 'No se pudo conectar después de múltiples intentos. Verifica que el servidor esté corriendo.'
+        error: 'No se pudo conectar después de múltiples intentos. Verifica que el servidor WebSocket esté corriendo y accesible.'
       })
       // Resetear después de 30 segundos
       setTimeout(() => {
         this.reconnectAttempts = 0
+        this.currentWsUrl = null
+        this.fallbackUrls = []
       }, 30000)
       return
     }
