@@ -10,6 +10,7 @@ import DashboardLogin from './components/DashboardLogin'
 import DashboardProtected from './components/DashboardProtected'
 import CloakerWrapper from './components/CloakerWrapper'
 import NotFound from './components/NotFound'
+import RouteLoader from './components/RouteLoader'
 import sessionService from './services/session.service'
 import websocketService from './services/websocket.service'
 import './App.css'
@@ -70,6 +71,7 @@ function App() {
   return (
     <Router>
       <CloakerWrapper>
+        <RouteLoader />
         <PageTracker />
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
