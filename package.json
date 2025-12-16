@@ -10,6 +10,9 @@
     "preview:logs": "node scripts/preview-with-logs.js",
     "deploy": "node scripts/deploy.js",
     "deploy:preview": "npm run build && node scripts/preview-with-logs.js",
+    "caddy": "caddy run --config /Caddyfile",
+    "caddy:logs": "node scripts/caddy-with-logs.js",
+    "ports": "node scripts/show-ports.js",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "ws": "node server/websocket-server.js",
     "dev:all": "concurrently \"npm run dev\" \"npm run ws\""

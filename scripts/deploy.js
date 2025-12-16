@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -26,6 +26,45 @@ function getPortFromConfig() {
   } catch (error) {
     return process.env.PORT || 4173;
   }
+}
+
+// Detectar puerto de Caddy
+function getCaddyPort() {
+  // Intentar leer desde variable de entorno
+  if (process.env.CADDY_PORT) {
+    return process.env.CADDY_PORT;
+  }
+
+  // Buscar Caddyfile en diferentes ubicaciones
+  const possibleCaddyfiles = [
+    join(rootDir, 'Caddyfile'),
+    join(rootDir, '/Caddyfile'),
+    '/Caddyfile',
+    '/etc/caddy/Caddyfile'
+  ];
+
+  for (const caddyfilePath of possibleCaddyfiles) {
+    if (existsSync(caddyfilePath)) {
+      try {
+        const content = readFileSync(caddyfilePath, 'utf-8');
+        // Buscar puerto en formato :80, :8080, etc.
+        const portMatch = content.match(/:(\d+)/);
+        if (portMatch) {
+          return portMatch[1];
+        }
+        // Buscar en formato "http://localhost:80"
+        const httpMatch = content.match(/http:\/\/[^:]+:(\d+)/);
+        if (httpMatch) {
+          return httpMatch[1];
+        }
+      } catch (error) {
+        // Continuar buscando
+      }
+    }
+  }
+
+  // Puerto por defecto de Caddy cuando no hay TLS (HTTP)
+  return '80';
 }
 
 // Obtener puerto del WebSocket
@@ -59,6 +98,7 @@ async function deploy() {
 
     // Obtener puertos
     const appPort = getPortFromConfig();
+    const caddyPort = getCaddyPort();
     const wsPort = getWebSocketPort();
 
     // Paso 2: Mostrar información de deploy
@@ -69,7 +109,11 @@ async function deploy() {
     console.log('');
     console.log('📡 Servicios disponibles en los siguientes puertos:');
     console.log('');
-    console.log(`   🌐 Aplicación Frontend:`);
+    console.log(`   🌐 Servidor Caddy (HTTP):`);
+    console.log(`      http://localhost:${caddyPort}`);
+    console.log(`      http://0.0.0.0:${caddyPort}`);
+    console.log('');
+    console.log(`   🚀 Aplicación Frontend (Vite Preview):`);
     console.log(`      http://localhost:${appPort}`);
     console.log(`      http://0.0.0.0:${appPort}`);
     console.log('');
@@ -79,14 +123,17 @@ async function deploy() {
     console.log('');
     console.log('='.repeat(60));
     console.log('');
+    console.log('💡 Para iniciar Caddy con logs de puertos, ejecuta:');
+    console.log('   npm run caddy:logs');
+    console.log('');
+    console.log('💡 O si ya tienes Caddy corriendo, ejecuta:');
+    console.log('   npm run ports');
+    console.log('');
     console.log('💡 Para iniciar el servidor de preview, ejecuta:');
     console.log('   npm run preview');
     console.log('');
     console.log('💡 Para iniciar el servidor WebSocket, ejecuta:');
     console.log('   npm run ws');
-    console.log('');
-    console.log('💡 Para iniciar ambos servicios, ejecuta:');
-    console.log('   npm run preview & npm run ws');
     console.log('');
 
   } catch (error) {
