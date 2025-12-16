@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom'
 
 const RouteLoader: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
-  const [showContent, setShowContent] = useState(true)
   const location = useLocation()
   const previousPath = useRef(location.pathname)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
@@ -11,8 +10,6 @@ const RouteLoader: React.FC = () => {
   useEffect(() => {
     // Solo mostrar loader si cambió la ruta (no en la primera carga)
     if (previousPath.current !== location.pathname) {
-      // Ocultar contenido actual
-      setShowContent(false)
       setIsLoading(true)
 
       // Limpiar timer anterior si existe
@@ -23,11 +20,7 @@ const RouteLoader: React.FC = () => {
       // Mostrar loader durante 2 segundos
       timerRef.current = setTimeout(() => {
         setIsLoading(false)
-        // Pequeño delay antes de mostrar el nuevo contenido para transición suave
-        setTimeout(() => {
-          setShowContent(true)
-          previousPath.current = location.pathname
-        }, 100)
+        previousPath.current = location.pathname
       }, 2000)
     } else {
       // Primera carga, no mostrar loader
